@@ -1,0 +1,24 @@
+{
+  "name": "botwrapper",
+  "version": "0.0.1",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "mvoevodskiy",
+  "license": "ISC",
+  "dependencies": {
+    "telegraf": "^3.32.0"
+  },
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mvoevodskiy/BotWrapper.git"
+  },
+  "bugs": {
+    "url": "https://github.com/mvoevodskiy/BotWrapper/issues"
+  },
+  "homepage": "https://github.com/mvoevodskiy/BotWrapper#readme",
+  "description": ""
+}
