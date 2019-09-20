@@ -17,7 +17,7 @@
   "devDependencies": {},
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/mvoevodskiy/BotCMS.git"
+    "url": "https://github.com/mvoevodskiy/BotCMS.git"
   },
   "bugs": {
     "url": "https://github.com/mvoevodskiy/BotCMS/issues"

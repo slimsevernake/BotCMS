@@ -40,8 +40,8 @@ class Telegram {
             session: ctx.session,
         };
 
-        let BWContext = new BotCMSContext(params);
-        return t.BC.handleUpdate(BWContext);
+        let BCContext = new BotCMSContext(params);
+        return t.BC.handleUpdate(BCContext);
     }
 
     listen () {

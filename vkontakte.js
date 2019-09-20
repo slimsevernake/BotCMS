@@ -5,7 +5,7 @@ const BotCMSContext = require('./botcmscontext');
 
 class VKontakte {
     constructor (BC, params = {}) {
-        this.BW = BC;
+        this.BC = BC;
         this.name = 'vk';
         this.sessionManager = new SessionManager();
         this.transport = new VK(params);
@@ -51,8 +51,8 @@ class VKontakte {
             session: ctx.session,
         };
 
-        let BWContext = new BotCMSContext(params);
-        return t.BC.handleUpdate(BWContext);
+        let BCContext = new BotCMSContext(params);
+        return t.BC.handleUpdate(BCContext);
     }
 
     listen () {
