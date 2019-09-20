@@ -10,6 +10,7 @@
   "license": "ISC",
   "dependencies": {
     "@vk-io/session": "0.0.0-alpha.1",
+    "cron": "^1.7.2",
     "telegraf": "^3.32.0",
     "telegraf-session-local": "^1.0.2",
     "vk-io": "^4.0.0-rc.20"
