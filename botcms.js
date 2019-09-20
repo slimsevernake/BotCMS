@@ -131,12 +131,13 @@ class BotCMS {
                     await method(answer, ctx);
                 }
             }
-            for (let helpPath of answer.help) {
-                const helpStep = this.T.extract(helpPath, this.scripts);
+            // for (let helpPath of answer.help) {
+            //     const helpStep = this.T.extract(helpPath, this.scripts);
+                const helpStep = this.T.extract(answer.help, this.scripts);
                 if (!this.T.empty(helpStep)) {
                     await this.doUpdate(helpStep, ctx, false, opts);
                 }
-            }
+            // }
 
             if (!this.T.empty(answer.goto)) {
                 const next = this.T.extract(answer.goto, this.scripts);
