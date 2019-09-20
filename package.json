@@ -1,7 +1,7 @@
 {
-  "name": "botwrapper",
+  "name": "botcms",
   "version": "0.0.1",
-  "main": "index.js",
+  "main": "botcms.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -9,16 +9,19 @@
   "author": "mvoevodskiy",
   "license": "ISC",
   "dependencies": {
-    "telegraf": "^3.32.0"
+    "@vk-io/session": "0.0.0-alpha.1",
+    "telegraf": "^3.32.0",
+    "telegraf-session-local": "^1.0.2",
+    "vk-io": "^4.0.0-rc.20"
   },
   "devDependencies": {},
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/mvoevodskiy/BotWrapper.git"
+    "url": "git+https://github.com/mvoevodskiy/BotCMS.git"
   },
   "bugs": {
-    "url": "https://github.com/mvoevodskiy/BotWrapper/issues"
+    "url": "https://github.com/mvoevodskiy/BotCMS/issues"
   },
-  "homepage": "https://github.com/mvoevodskiy/BotWrapper#readme",
+  "homepage": "https://github.com/mvoevodskiy/BotCMS#readme",
   "description": ""
 }
