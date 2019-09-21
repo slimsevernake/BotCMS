@@ -26,6 +26,7 @@ class VKontakte {
             return;
         }
         console.log(ctx);
+        console.log(ctx.payload);
         // for (let key in ctx) {
         //     // if (key.startsWith('is')) {
         //         console.log('DEFAULT CB. VK. ' + key + ' : ' + ctx[key]);
@@ -38,6 +39,7 @@ class VKontakte {
             message: {
                 type: ctx.type === 'message' ? 'text' : ctx.type,
                 text: ctx.text,
+                attachments: ctx.payload.attachments || [],
                 message_id: ctx.id,
                 from: {
                     id: ctx.senderId
@@ -111,15 +113,12 @@ class VKontakte {
     }
 
     reply (ctx, sendObject) {
-        // for (let key in sendObject) {
-        //     if (sendObject.hasOwnProperty(key)) {
-        //         if (this.BC.T.empty(sendObject[key])) {
-        //             delete sendObject[key];
-        //         }
-        //     }
-        // }
         console.log(sendObject);
         return ctx.send(sendObject);
+    }
+
+    send (sendObject) {
+        return this.transport.api.messages.send(sendObject);
     }
 
     start (middleware, ...middlewares) {
@@ -144,8 +143,8 @@ class VKontakte {
     }
 
     launch(middleware, ...middlewares) {
-        // this.transport.updates.start().catch(console.error);
-        this.transport.updates.startPolling();
+        this.transport.updates.start().catch(console.error);
+        // this.transport.updates.startPolling();
         console.log('VK started');
     }
 }
