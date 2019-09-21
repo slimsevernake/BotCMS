@@ -2,6 +2,7 @@ const drivers = {
     tg: require('./telegram'),
     vk: require('./vkontakte'),
 };
+const CronJob = require('cron').CronJob;
 
 
 class BotCMS {
@@ -10,6 +11,7 @@ class BotCMS {
 
         this.REGEXP_EMAIL = /^[\w-\.]+@[\w-]+\.[a-z]{2,4}$/i;
 
+        this.config = {};
         this.bridges = {};
         this.schema = {};
         this.scripts = {};
@@ -49,6 +51,12 @@ class BotCMS {
         if (!this.T.empty(schema.scripts)) {
             this.scripts = this.loadScript('', schema.scripts);
         }
+        if (!this.T.empty(schema.config)) {
+            this.loadConfig(schema.config);
+        }
+        if (!this.T.empty(schema.cron)) {
+            this.loadCron(schema.cron);
+        }
         for (let network in this.bridges) {
             if (!this.bridges.hasOwnProperty(network)) {
                 continue;
@@ -56,6 +64,10 @@ class BotCMS {
             this.bridges[network].loadSchema(schema);
         }
         // console.log(this.scripts);
+    }
+
+    loadConfig (config) {
+        this.config = config;
     }
 
     loadScript (parent, script, additional = {}) {
@@ -91,12 +103,46 @@ class BotCMS {
         return script;
     }
 
+    loadCron (jobs) {
+        for (let key in jobs) {
+            if (jobs.hasOwnProperty(key)) {
+                this.addCronJob(jobs[key]);
+            }
+        }
+    }
+
+    addCronJob (jobData) {
+        let job = new CronJob(jobData.trigger.value, () => this.processCronJob((jobData)));
+        job.start();
+    }
+
+    processCronJob (jobData) {
+        console.log('PROCESS CRON JOB', jobData);
+        switch (jobData.action.type) {
+            case 'send':
+                let targets = this.T.extract('action.options.target', jobData);
+                if (!this.T.empty(targets)) {
+                    for (let name in targets) {
+                        if (targets.hasOwnProperty(name) && !this.T.empty(this.bridges[name])) {
+                            this.bridges[name].send({
+                                peer_id: targets[name],
+                                message: jobData.message || '',
+                                keyboard: !this.T.empty(jobData.keyboard) ? this.bridges[name].kbBuild(jobData.keyboard) : []
+                            })
+                        }
+                    }
+                }
+        }
+    }
+
+
     async handleUpdate (ctx) {
         console.debug('======================');
         console.debug('=== HANDLE UPDATE ====');
         console.debug('======================');
 
         console.log('MESSAGE: ' + ctx.message.text);
+        console.log('SESSION: ', ctx.session);
 
         let path = ctx.session.step && ctx.session.step.hasOwnProperty('scope') ? ctx.session.step.scope :
             (ctx.session.step && ctx.session.step.hasOwnProperty('path') ? ctx.session.step.path : 'c');
@@ -106,16 +152,14 @@ class BotCMS {
         opts.kbRemove = Array.isArray(keyboardOptions) && keyboardOptions.indexOf('oneTime') > -1;
 
         // console.log('COMMANDS PATH: ', this.commands);
-        if (this.T.isCommand(ctx. message.text)) {
+        // if (this.T.isCommand(ctx. message.text)) {
             let step = this.getStepByCommand(ctx.message);
             if (step !== undefined) {
                 return this.doUpdate(step, ctx, true, opts);
             }
-        }
+        // }
 
-        let step = this.T.extract(path, this.scripts);
-
-
+        step = this.T.extract(path, this.scripts);
 
         // console.log(step);
         if (step !== undefined) {
@@ -154,13 +198,15 @@ class BotCMS {
                 }
             }
         }
-        return this.doUpdate(this.T.extract('c.help', this.scripts), ctx, false, opts);
+        if (this.T.extract('defaults.action', this.config) === 'help') {
+            return this.doUpdate(this.T.extract('c.help', this.scripts), ctx, false, opts);
+        }
     }
 
     doUpdate (current, ctx, updateSession = true, opts = {}) {
 
-        // console.log('DO UPDATE. CURRENT: ', current);
-        // console.log('DO UPDATE. OPTS', opts);
+        console.log('DO UPDATE. CURRENT: ', current);
+        console.log('DO UPDATE. OPTS', opts);
         if (updateSession) {
             ctx.session.step = current;
         }
@@ -188,20 +234,26 @@ class BotCMS {
                 if (result) {
                     return result.then(() => {this.doUpdate(newCurrent, ctx, updateSession)});
                 }
-                return this.doUpdate(current, ctx, updateSession);
+                return this.doUpdate(newCurrent, ctx, updateSession);
             }
         }
         return result;
     }
 
     getStepByCommand (command) {
+        // console.log('GET STEP BY COMMAND. TYPE OF COMMAND: ', typeof command);
+        if (typeof command.text !== 'string') {
+            return undefined;
+        }
         for (let i in this.commands) {
             if (!this.commands.hasOwnProperty(i)) {
                 continue;
             }
             const path = this.commands[i];
+            // console.log('GET STEP BY COMMAND. PATH: ' + path);
             let step = this.T.extract(path, this.scripts);
             if (step !== undefined && !this.T.empty(step.trigger) && this.T.checkTrigger(command, step.trigger)) {
+                // console.log('GET STEP BY COMMAND. FOUND');
                 return step;
             }
         }
@@ -220,7 +272,34 @@ class BotCMS {
             help: '',
             goto: '',
             text: msg,
+            attachments: {
+                photo: [],
+                audio: [],
+                file: [],
+                doc: [],
+                // Ссылки на прикрепленные посты
+                wall: [],
+                // Товары
+                market: [],
+                // Опросы
+                poll: [],
+                sticker: [],
+            }
         };
+
+        console.log(message.attachments);
+        if (!this.T.empty(message.attachments)) {
+            for (let attachment of message.attachments) {
+                // console.log('BUILD ANSWER. ATTACHMENT: ', message.attachments[i]);
+                // if (message.attachments[i] === undefined) {
+                //     continue;
+                // }
+                let type = attachment.type;
+                if (Array.isArray(output.attachments[type])) {
+                    output.attachments[type].push(attachment[type]);
+                }
+            }
+        }
 
         if (!this.T.empty(validator)) {
             switch (validator) {
@@ -239,6 +318,10 @@ class BotCMS {
 
                 case 'number':
                     result = message.type === 'text' && parseInt(message.text).toString(10);
+                    break;
+
+                case 'photo':
+                    result = output.attachments.photo.length > 0;
                     break;
 
                 default:
@@ -264,7 +347,7 @@ class BotCMS {
             }
         }
 
-        // console.log('BUILD ANSWER. OUTPUT: ', output);
+        console.log('BUILD ANSWER. OUTPUT: ', output);
         return output;
     }
 
@@ -284,7 +367,6 @@ class BotCMS {
 
 
     standard (method, middleware, ...middlewares) {
-        // let fn = arguments.callee.name;
         for (let network in this.bridges) {
             if (this.bridges.hasOwnProperty(network)) {
                 // console.log(this.bridges[network]);
@@ -331,6 +413,11 @@ class BotCMSTools {
             || (Array.isArray(variable) && variable.length === 0);
     }
 
+    emptyExtracted (path, target = window) {
+        const extracted = this.extract(path, target);
+        return this.empty(extracted);
+    }
+
     isArray (data) {
         console.log('IS ARRAY. TYPE: ' + Object.prototype.toString.call(data));
         return Object.prototype.toString.call(data) === '[object Array]'
@@ -375,8 +462,20 @@ class BotCMSTools {
             }
 
             if (triggerObject.type === 'regexp' && message.type === 'text') {
-                trigger = new RegExp(triggerObject.value, 'gim');
-                result = message.text.toString().search(trigger) !== -1;
+                if (Array.isArray(triggerObject.value)) {
+                    for (const re of triggerObject.value) {
+                        trigger = new RegExp(re, 'gim');
+                        result = message.text.toString().search(trigger) !== -1;
+                        if (result) {
+                            break;
+                        }
+                    }
+                    console.log('CHECK TRIGGER. IS ARRAY');
+                } else {
+                    console.log('CHECK TRIGGER. IS STRING');
+                    trigger = new RegExp(triggerObject.value, 'gim');
+                    result = message.text.toString().search(trigger) !== -1;
+                }
             }
 
             if (triggerObject.type === 'method') {
