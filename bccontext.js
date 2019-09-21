@@ -1,4 +1,4 @@
-class BotCMSContext {
+class BcContext {
     constructor (params) {
         // console.log(params);
         for (let key in params) {
@@ -10,5 +10,5 @@ class BotCMSContext {
     }
 }
 
-module.exports = BotCMSContext;
-module.exports.default = BotCMSContext;
+module.exports = BcContext;
+module.exports.default = BcContext;

@@ -1,7 +1,7 @@
 // import VK from 'vk-io';
 const { VK, Keyboard } = require('vk-io');
 const { SessionManager } = require('@vk-io/session');
-const BotCMSContext = require('./botcmscontext');
+const BcContext = require('./bccontext');
 
 class VKontakte {
     constructor (BC, params = {}) {
@@ -53,7 +53,7 @@ class VKontakte {
             session: ctx.session,
         };
 
-        let BCContext = new BotCMSContext(params);
+        let BCContext = new BcContext(params);
         return t.BC.handleUpdate(BCContext);
     }
 

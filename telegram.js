@@ -2,7 +2,7 @@ const Telegraf = require('telegraf');
 const Extra = require('telegraf/extra');
 const Markup = require('telegraf/markup');
 const LocalSession = require('telegraf-session-local');
-const BotCMSContext = require('./botcmscontext');
+const BcContext = require('./bccontext');
 
 
 class Telegram {
@@ -40,7 +40,7 @@ class Telegram {
             session: ctx.session,
         };
 
-        let BCContext = new BotCMSContext(params);
+        let BCContext = new BcContext(params);
         return t.BC.handleUpdate(BCContext);
     }
 
