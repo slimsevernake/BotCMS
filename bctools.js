@@ -2,6 +2,8 @@ class BcTools {
 
     constructor (BC) {
         this.BC = BC;
+
+        this.REGEXP_EMAIL = /^[\w-\.]+@[\w-]+\.[a-z]{2,4}$/i;
     }
 
     empty (variable) {

@@ -5,8 +5,6 @@ class BotCMS {
 
     constructor (params = {}) {
 
-        this.REGEXP_EMAIL = /^[\w-\.]+@[\w-]+\.[a-z]{2,4}$/i;
-
         this.T = new BcTools();
 
         this.config = {};
@@ -324,7 +322,7 @@ class BotCMS {
                     break;
 
                 case 'email':
-                    result = message.type === 'text' && message.text.match(this.REGEXP_EMAIL);
+                    result = message.type === 'text' && message.text.match(this.T.REGEXP_EMAIL);
                     console.log('CHECK ANSWER. TYPE EMAIL. RESULT: ' + result);
                     break;
 
