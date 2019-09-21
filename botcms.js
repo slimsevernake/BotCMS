@@ -1,10 +1,5 @@
 const BcTools = require('./bctools');
-const drivers = {
-    tg: require('./telegram'),
-    vk: require('./vkontakte'),
-};
 const CronJob = require('cron').CronJob;
-
 
 class BotCMS {
 
@@ -12,12 +7,17 @@ class BotCMS {
 
         this.REGEXP_EMAIL = /^[\w-\.]+@[\w-]+\.[a-z]{2,4}$/i;
 
+        this.T = new BcTools();
+
         this.config = {};
         this.bridges = {};
         this.schema = {};
         this.scripts = {};
         this.commands = [];
-        this.T = new BcTools();
+        this.drivers = {
+            tg: './telegram',
+            vk: './vkontakte',
+        };
         this.defaultStep = {
             trigger: {
                 type: 'text',
@@ -32,17 +32,28 @@ class BotCMS {
             forceGoto: false,
         };
 
-        for (let network in params) {
-            if (!params.hasOwnProperty(network)) {
-                continue;
+        if (!this.T.empty(params.drivers)) {
+            for (const path in params.drivers) {
+                if (params.drivers.hasOwnProperty(path)) {
+                    this.drivers[path] = params.drivers[path];
+                }
             }
-            if (drivers[network] === undefined) {
-                continue;
-            }
-            let tmp = new drivers[network](this, params[network]);
-            if (tmp.isAvailable() === true) {
-                this.bridges[network] = tmp;
-                this.bridges[network].listen();
+        }
+
+        if (!this.T.empty(params.networks)) {
+            for (let network in params.networks) {
+                if (!params.networks.hasOwnProperty(network) || this.drivers[network] === undefined) {
+                    continue;
+                }
+                const driver = require(this.drivers[network]);
+                if (this.T.empty(driver)) {
+                    continue;
+                }
+                let tmp = new driver(this, params.networks[network]);
+                if (tmp.isAvailable() === true) {
+                    this.bridges[network] = tmp;
+                    this.bridges[network].listen();
+                }
             }
         }
     }
