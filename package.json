@@ -12,6 +12,7 @@
     "@vk-io/session": "0.0.0-alpha.1",
     "cron": "^1.7.2",
     "js-middleware": "^0.3.1",
+    "mvtools": "git+https://github.com/mvoevodskiy/mvtools.git",
     "mysql": "^2.17.1",
     "telegraf": "^3.32.0",
     "telegraf-session-local": "^1.0.2",
