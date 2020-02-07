@@ -9,17 +9,17 @@
   "author": "mvoevodskiy",
   "license": "ISC",
   "dependencies": {
-    "@vk-io/session": "^0.0.0-alpha.1",
-    "cron": "^1.7.2",
+    "@vk-io/session": "0.0.0-alpha.3",
+    "cron": "^1.8.2",
     "js-middleware": "^0.3.1",
-    "mvl-handlebars-handler": "^0.0.1",
-    "mvtools": "^0.0.3",
-    "mysql": "^2.17.1",
-    "telegraf": "^3.32.0",
+    "mvl-handlebars-handler": "^1.0.0",
+    "mvtools": "^1.0.0",
+    "mysql": "^2.18.1",
+    "telegraf": "^3.36.0",
     "telegraf-session-local": "^1.0.2",
     "telegraf-session-mysql": "^5.1.0",
-    "typeorm": "^0.2.19",
-    "vk-io": "^4.0.0-rc.23"
+    "typeorm": "^0.2.22",
+    "vk-io": "^4.0.0-rc.30"
   },
   "devDependencies": {},
   "repository": {
