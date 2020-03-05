@@ -65,7 +65,7 @@ let bot = new BotCMS(config);
 // Загрузка схемы - готовый объект или путь к файлу
 bot.loadSchema(schema)
     .then(() => bot.init())
-    .then(async () => await bot.launch());
+    .then(() => bot.launch());
 ```
 
 # Настройка
