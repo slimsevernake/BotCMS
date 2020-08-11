@@ -1,6 +1,6 @@
 {
   "name": "botcms",
-  "version": "1.0.27-beta.1",
+  "version": "1.0.27-beta.2",
   "main": "lib/botcms.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
