@@ -19,7 +19,7 @@
     "telegraf-session-local": "^1.0.2",
     "telegraf-session-mysql": "^5.1.0",
     "typeorm": "^0.2.24",
-    "vk-io": "^4.0.0-rc.30"
+    "vk-io": "^4.0.1"
   },
   "devDependencies": {},
   "repository": {
