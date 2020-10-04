@@ -9,17 +9,13 @@
   "author": "mvoevodskiy",
   "license": "ISC",
   "dependencies": {
-    "@vk-io/session": "0.0.0-alpha.3",
+    "@vk-io/session": "^1.0.0",
     "cron": "^1.8.2",
     "js-middleware": "^0.3.1",
     "mvl-handlebars-handler": "^1.0.0",
-    "mvtools": "^1.0.4",
-    "mysql": "^2.18.1",
+    "mvtools": "^1.0.17",
     "telegraf": "^3.36.0",
-    "telegraf-session-local": "^1.0.2",
-    "telegraf-session-mysql": "^5.1.0",
-    "typeorm": "^0.2.24",
-    "vk-io": "^4.0.1"
+    "vk-io": "^4.0.2"
   },
   "devDependencies": {},
   "repository": {
