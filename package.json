@@ -12,6 +12,7 @@
     "@vk-io/session": "^1.0.0",
     "cron": "^1.8.2",
     "js-middleware": "^0.3.1",
+    "lowdb": "^1.0.0",
     "mvl-handlebars-handler": "^1.0.0",
     "mvtools": "^1.0.17",
     "telegraf": "^3.36.0",
